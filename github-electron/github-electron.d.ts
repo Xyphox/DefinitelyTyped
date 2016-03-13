@@ -1,11 +1,11 @@
-// Type definitions for Electron v0.35.0
+// Type definitions for Electron v0.36.3
 // Project: http://electron.atom.io/
 // Definitions by: jedmao <https://github.com/jedmao/>, rhysd <https://rhysd.github.io>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="../node/node.d.ts" />
 
-declare module GitHubElectron {
+declare module Electron {
 	/**
 	 * This class is used to represent an image.
 	 */
@@ -51,6 +51,10 @@ declare module GitHubElectron {
 		 * Marks the image as template image.
 		 */
 		setTemplateImage(option: boolean): void;
+		/**
+		 * Returns a boolean whether the image is a template image.
+		 */
+		isTemplateImage(): boolean;
 	}
 
 	module Clipboard {
@@ -64,13 +68,41 @@ declare module GitHubElectron {
 		function writeImage(image: NativeImage, type?: string): void;
 	}
 
+	interface Display {
+		id:number;
+		bounds:Bounds;
+		workArea:Bounds;
+		size:Dimension;
+		workAreaSize:Dimension;
+		scaleFactor:number;
+		rotation:number;
+		touchSupport:string;
+	}
+
+	interface Bounds {
+		x:number;
+		y:number;
+		width:number;
+		height:number;
+	}
+
+	interface Dimension {
+		width:number;
+		height:number;
+	}
+
+	interface Point {
+		x:number;
+		y:number;
+	}
+
 	class Screen implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): Screen;
-		on(event: string, listener: Function): Screen;
-		once(event: string, listener: Function): Screen;
-		removeListener(event: string, listener: Function): Screen;
-		removeAllListeners(event?: string): Screen;
-		setMaxListeners(n: number): Screen;
+		addListener(event: string, listener: Function): this;
+		on(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
@@ -78,26 +110,23 @@ declare module GitHubElectron {
 		/**
 		 * @returns The current absolute position of the mouse pointer.
 		 */
-		getCursorScreenPoint(): any;
+		getCursorScreenPoint(): Point;
 		/**
 		 * @returns The primary display.
 		 */
-		getPrimaryDisplay(): any;
+		getPrimaryDisplay(): Display;
 		/**
 		 * @returns An array of displays that are currently available.
 		 */
-		getAllDisplays(): any[];
+		getAllDisplays(): Display[];
 		/**
 		 * @returns The display nearest the specified point.
 		 */
-		getDisplayNearestPoint(point: {
-			x: number;
-			y: number;
-		}): any;
+		getDisplayNearestPoint(point: Point): Display;
 		/**
 		 * @returns The display that most closely intersects the provided bounds.
 		 */
-		getDisplayMatching(rect: Rectangle): any;
+		getDisplayMatching(rect: Rectangle): Display;
 	}
 
 	/**
@@ -105,12 +134,12 @@ declare module GitHubElectron {
 	 * You can also create a window without chrome by using Frameless Window API.
 	 */
 	class BrowserWindow implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): WebContents;
-		on(event: string, listener: Function): WebContents;
-		once(event: string, listener: Function): WebContents;
-		removeListener(event: string, listener: Function): WebContents;
-		removeAllListeners(event?: string): WebContents;
-		setMaxListeners(n: number): WebContents;
+		addListener(event: string, listener: Function): this;
+		on(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
@@ -454,6 +483,7 @@ declare module GitHubElectron {
 	interface WebPreferences {
 		nodeIntegration?: boolean;
 		preload?: string;
+		session?: Session;
 		partition?: string;
 		zoomFactor?: number;
 		javascript?: boolean;
@@ -467,16 +497,11 @@ declare module GitHubElectron {
 		plugins?: boolean;
 		experimentalFeatures?: boolean;
 		experimentalCanvasFeatures?: boolean;
-		overlayScrollbars?: boolean;
-		sharedWorker?: boolean;
 		directWrite?: boolean;
-		pageVisibility?: boolean;
+		blinkFeatures?: string;
 	}
 
-	// Includes all options BrowserWindow can take as of this writing
-	// http://electron.atom.io/docs/v0.29.0/api/browser-window/
 	interface BrowserWindowOptions extends Rectangle {
-		show?: boolean;
 		useContentSize?: boolean;
 		center?: boolean;
 		minWidth?: number;
@@ -487,27 +512,22 @@ declare module GitHubElectron {
 		alwaysOnTop?: boolean;
 		fullscreen?: boolean;
 		skipTaskbar?: boolean;
-		zoomFactor?: number;
 		kiosk?: boolean;
 		title?: string;
 		icon?: NativeImage|string;
+		show?: boolean;
 		frame?: boolean;
 		acceptFirstMouse?: boolean;
 		disableAutoHideCursor?: boolean;
 		autoHideMenuBar?: boolean;
 		enableLargerThanScreen?: boolean;
+		backgroundColor?: string;
 		darkTheme?: boolean;
 		preload?: string;
 		transparent?: boolean;
 		type?: string;
-		standardWindow?: boolean;
-		webPreferences?: WebPreferences;
-		java?: boolean;
-		textAreasAreResizable?: boolean;
-		extraPluginDirs?: string[];
-		subpixelFontScaling?: boolean;
-		overlayFullscreenVideo?: boolean;
 		titleBarStyle?: string;
+		webPreferences?: WebPreferences;
 	}
 
 	interface Rectangle {
@@ -521,12 +541,12 @@ declare module GitHubElectron {
 	 * A WebContents is responsible for rendering and controlling a web page.
 	 */
 	class WebContents implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): WebContents;
-		on(event: string, listener: Function): WebContents;
-		once(event: string, listener: Function): WebContents;
-		removeListener(event: string, listener: Function): WebContents;
-		removeAllListeners(event?: string): WebContents;
-		setMaxListeners(n: number): WebContents;
+		addListener(event: string, listener: Function): this;
+		on(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
@@ -616,7 +636,7 @@ declare module GitHubElectron {
 		 * Evaluates code in page.
 		 * @param code Code to evaluate.
 		 */
-		executeJavaScript(code: string): void;
+		executeJavaScript(code: string, userGesture?: boolean, callback?: (result: any) => void): void;
 		/**
 		 * Executes Edit -> Undo command in page.
 		 */
@@ -751,9 +771,17 @@ declare module GitHubElectron {
 		 */
 		isDevToolsOpened(): boolean;
 		/**
+		 * Returns whether the developer tools are focussed.
+		 */
+		isDevToolsFocused(): boolean;
+		/**
 		 * Toggle the developer tools.
 		 */
 		toggleDevTools(): void;
+		/**
+		 * Starts inspecting element at position (x, y).
+		 */
+		inspectElement(x: number, y: number): void;
 		/**
 		 * Send args.. to the web page via channel in asynchronous message, the web page
 		 * can handle it by listening to the channel event of ipc module.
@@ -884,7 +912,7 @@ declare module GitHubElectron {
 		 * Should be specified for submenu type menu item, when it's specified the
 		 * type: 'submenu' can be omitted for the menu item
 		 */
-		submenu?: MenuItemOptions[];
+		submenu?: Menu|MenuItemOptions[];
 		/**
 		 * Unique within a single menu. If defined then it can be used as a reference
 		 * to this item by the position attribute.
@@ -931,12 +959,12 @@ declare module GitHubElectron {
 	}
 
 	class App implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): App;
-		on(event: string, listener: Function): App;
-		once(event: string, listener: Function): App;
-		removeListener(event: string, listener: Function): App;
-		removeAllListeners(event?: string): App;
-		setMaxListeners(n: number): App;
+		addListener(event: string, listener: Function): this;
+		on(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
@@ -993,6 +1021,10 @@ declare module GitHubElectron {
 		 */
 		getName(): string;
 		/**
+		  * @returns The current application locale.
+		  **/
+		getLocale(): string;
+		/**
 		 * Resolves the proxy information for url, the callback would be called with
 		 * callback(proxy) when the request is done.
 		 */
@@ -1014,7 +1046,7 @@ declare module GitHubElectron {
 		 * Note: This API is only available on Windows.
 		 */
 		setUserTasks(tasks: Task[]): void;
-		dock: BrowserWindow;
+		dock: Dock;
 		commandLine: CommandLine;
 		/**
 		 * This method makes your application a Single Instance Application instead of allowing
@@ -1022,6 +1054,7 @@ declare module GitHubElectron {
 		 * of your app is running, and other instances signal this instance and exit.
 		 */
 		makeSingleInstance(callback: (args: string[], workingDirectory: string) => boolean): boolean;
+		setAppUserModelId(id: string): void;
 	}
 
 	interface CommandLine {
@@ -1038,6 +1071,64 @@ declare module GitHubElectron {
 		 * Note: This will not affect process.argv.
 		 */
 		appendArgument(value: any): void;
+	}
+
+	interface Dock {
+		/**
+		 * When critical is passed, the dock icon will bounce until either the
+		 * application becomes active or the request is canceled.
+		 *
+		 * When informational is passed, the dock icon will bounce for one second.
+		 * The request, though, remains active until either the application becomes
+		 * active or the request is canceled.
+		 *
+		 * Note: This API is only available on Mac.
+		 * @param type Can be critical or informational, the default is informational.
+		 * @returns An ID representing the request
+		 */
+		bounce(type?: string): number;
+		/**
+		 * Cancel the bounce of id.
+		 *
+		 * Note: This API is only available on Mac.
+		 */
+		cancelBounce(id: number): void;
+		/**
+		 * Sets the string to be displayed in the dock’s badging area.
+		 *
+		 * Note: This API is only available on Mac.
+		 */
+		setBadge(text: string): void;
+		/**
+		 * Returns the badge string of the dock.
+		 *
+		 * Note: This API is only available on Mac.
+		 */
+		getBadge(): string;
+		/**
+		 * Hides the dock icon.
+		 *
+		 * Note: This API is only available on Mac.
+		 */
+		hide(): void;
+		/**
+		 * Shows the dock icon.
+		 *
+		 * Note: This API is only available on Mac.
+		 */
+		show(): void;
+		/**
+		 * Sets the application dock menu.
+		 *
+		 * Note: This API is only available on Mac.
+		 */
+		setMenu(menu: Menu): void;
+		/**
+		 * Sets the image associated with this dock icon.
+		 *
+		 * Note: This API is only available on Mac.
+		 */
+		setIcon(icon: NativeImage | string): void;
 	}
 
 	interface Task {
@@ -1057,7 +1148,7 @@ declare module GitHubElectron {
 		/**
 		 * Description of this task.
 		 */
-		description: string;
+		description?: string;
 		/**
 		 * The absolute path to an icon to be displayed in a JumpList, it can be
 		 * arbitrary resource file that contains an icon, usually you can specify
@@ -1069,68 +1160,18 @@ declare module GitHubElectron {
 		 * icons, set this value to identify the icon. If an icon file consists of
 		 * one icon, this value is 0.
 		 */
-		iconIndex: number;
-		commandLine: CommandLine;
-		dock: {
-			/**
-			 * When critical is passed, the dock icon will bounce until either the
-			 * application becomes active or the request is canceled.
-			 *
-			 * When informational is passed, the dock icon will bounce for one second.
-			 * The request, though, remains active until either the application becomes
-			 * active or the request is canceled.
-			 *
-			 * Note: This API is only available on Mac.
-			 * @param type Can be critical or informational, the default is informational.
-			 * @returns An ID representing the request
-			 */
-			bounce(type?: string): any;
-			/**
-			 * Cancel the bounce of id.
-			 *
-			 * Note: This API is only available on Mac.
-			 */
-			cancelBounce(id: number): void;
-			/**
-			 * Sets the string to be displayed in the dock’s badging area.
-			 *
-			 * Note: This API is only available on Mac.
-			 */
-			setBadge(text: string): void;
-			/**
-			 * Returns the badge string of the dock.
-			 *
-			 * Note: This API is only available on Mac.
-			 */
-			getBadge(): string;
-			/**
-			 * Hides the dock icon.
-			 *
-			 * Note: This API is only available on Mac.
-			 */
-			hide(): void;
-			/**
-			 * Shows the dock icon.
-			 *
-			 * Note: This API is only available on Mac.
-			 */
-			show(): void;
-			/**
-			 * Sets the application dock menu.
-			 *
-			 * Note: This API is only available on Mac.
-			 */
-			setMenu(menu: Menu): void;
-		};
+		iconIndex?: number;
+		commandLine?: CommandLine;
+		dock?: Dock;
 	}
 
 	class AutoUpdater implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): AutoUpdater;
-		on(event: string, listener: Function): AutoUpdater;
-		once(event: string, listener: Function): AutoUpdater;
-		removeListener(event: string, listener: Function): AutoUpdater;
-		removeAllListeners(event?: string): AutoUpdater;
-		setMaxListeners(n: number): AutoUpdater;
+		addListener(event: string, listener: Function): this;
+		on(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
@@ -1145,6 +1186,11 @@ declare module GitHubElectron {
 		 * before using this API
 		 */
 		checkForUpdates(): any;
+		/**
+		 * Restarts the app and installs the update after it has been downloaded.
+		 * It should only be called after update-downloaded has been emitted.
+		 */
+		 quitAndInstall(): void;
 	}
 
 	module Dialog {
@@ -1180,6 +1226,19 @@ declare module GitHubElectron {
 			properties?: string|string[];
 		}
 
+		interface SaveDialogOptions {
+			title?: string;
+			defaultPath?: string;
+			/**
+			 * File types that can be displayed, see dialog.showOpenDialog for an example.
+			 */
+
+			filters?: {
+				name: string;
+				extensions: string[];
+			}[];
+		}
+
 		/**
 		 * @param browserWindow
 		 * @param options
@@ -1187,18 +1246,7 @@ declare module GitHubElectron {
 		 * @returns On success, returns the path of file chosen by the user, otherwise
 		 * returns undefined.
 		 */
-		export function showSaveDialog(browserWindow?: BrowserWindow, options?: {
-			title?: string;
-			defaultPath?: string;
-			/**
-			 * File types that can be displayed, see dialog.showOpenDialog for an example.
-			 */
-			 
-			filters?: {
-				name: string;
-				extensions: string[];
-			}[]
-		}, callback?: (fileName: string) => void): string;
+		export function showSaveDialog(browserWindow?: BrowserWindow, options?: SaveDialogOptions, callback?: (fileName: string) => void): string;
 
 		/**
 		 * Shows a message box. It will block until the message box is closed. It returns .
@@ -1237,16 +1285,18 @@ declare module GitHubElectron {
 			 */
 			detail?: string;
 			icon?: NativeImage;
+			noLink?: boolean;
+			cancelId?: number;
 		}
 	}
 
 	class Tray implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): Tray;
-		on(event: string, listener: Function): Tray;
-		once(event: string, listener: Function): Tray;
-		removeListener(event: string, listener: Function): Tray;
-		removeAllListeners(event?: string): Tray;
-		setMaxListeners(n: number): Tray;
+		addListener(event: string, listener: Function): this;
+		on(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
@@ -1308,11 +1358,11 @@ declare module GitHubElectron {
 		/**
 		 * @returns The contents of the clipboard as a NativeImage.
 		 */
-		readImage: typeof GitHubElectron.Clipboard.readImage;
+		readImage: typeof Electron.Clipboard.readImage;
 		/**
 		 * Writes the image into the clipboard.
 		 */
-		writeImage: typeof GitHubElectron.Clipboard.writeImage;
+		writeImage: typeof Electron.Clipboard.writeImage;
 		/**
 		 * Clears everything in clipboard.
 		 */
@@ -1334,15 +1384,11 @@ declare module GitHubElectron {
 		* Default: Electron
 		*/
 		productName?: string;
-		/**
-		* Default: GitHub, Inc.
-		*/
-		companyName?: string;
+		companyName: string;
 		/**
 		* URL that crash reports would be sent to as POST.
-		* Default: http://54.249.141.255:1127/post
 		*/
-		submitURL?: string;
+		submitURL: string;
 		/**
 		* Send the crash report without user interaction.
 		* Default: true.
@@ -1357,7 +1403,7 @@ declare module GitHubElectron {
 		* Only string properties are send correctly.
 		* Nested objects are not supported.
 		*/
-		extra?: {};
+		extra?: {[prop: string]: string};
 	}
 
 	interface CrashReporterPayload extends Object {
@@ -1401,7 +1447,7 @@ declare module GitHubElectron {
 	}
 
 	interface CrashReporter {
-		start(options?: CrashReporterStartOptions): void;
+		start(options: CrashReporterStartOptions): void;
 
 		/**
 		 * @returns The date and ID of the last crash report. When there was no crash report
@@ -1437,12 +1483,12 @@ declare module GitHubElectron {
 	// Type definitions for renderer process
 
 	export class IpcRenderer implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): IpcRenderer;
-		on(event: string, listener: Function): IpcRenderer;
-		once(event: string, listener: Function): IpcRenderer;
-		removeListener(event: string, listener: Function): IpcRenderer;
-		removeAllListeners(event?: string): IpcRenderer;
-		setMaxListeners(n: number): IpcRenderer;
+		addListener(event: string, listener: Function): this;
+		on(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
@@ -1469,16 +1515,16 @@ declare module GitHubElectron {
 	}
 
 	class IPCMain implements NodeJS.EventEmitter {
-		addListener(event: string, listener: Function): IPCMain;
-		once(event: string, listener: Function): IPCMain;
-		removeListener(event: string, listener: Function): IPCMain;
-		removeAllListeners(event?: string): IPCMain;
-		setMaxListeners(n: number): IPCMain;
+		addListener(event: string, listener: Function): this;
+		once(event: string, listener: Function): this;
+		removeListener(event: string, listener: Function): this;
+		removeAllListeners(event?: string): this;
+		setMaxListeners(n: number): this;
 		getMaxListeners(): number;
 		listeners(event: string): Function[];
 		emit(event: string, ...args: any[]): boolean;
 		listenerCount(type: string): number;
-		on(event: string, listener: (event: IPCMainEvent, ...args: any[]) => any): IPCMain;
+		on(event: string, listener: (event: IPCMainEvent, ...args: any[]) => any): this;
 	}
 
 	interface IPCMainEvent {
@@ -1495,6 +1541,10 @@ declare module GitHubElectron {
 		 * @returns The BrowserWindow object which this web page belongs to.
 		 */
 		getCurrentWindow(): BrowserWindow;
+		/**
+		 * @returns The WebContents object of this web page.
+		 */
+		getCurrentWebContents(): WebContents;
 		/**
 		 * @returns The global variable of name (e.g. global[name]) in the main process.
 		 */
@@ -1541,6 +1591,17 @@ declare module GitHubElectron {
 		 * corrupted by active network attackers.
 		 */
 		registerURLSchemeAsSecure(scheme: string): void;
+		/**
+		 * Inserts text to the focused element.
+		 */
+		insertText(text: string): void;
+		/**
+		 * Evaluates `code` in page.
+ 		 * In the browser window some HTML APIs like `requestFullScreen` can only be
+ 		 * invoked by a gesture from the user. Setting `userGesture` to `true` will remove
+ 		 * this limitation.
+		 */
+		executeJavaScript(code: string, userGesture?: boolean, callback?: (result: any) => void): void;
 	}
 
 	// Type definitions for main process
@@ -1631,19 +1692,19 @@ declare module GitHubElectron {
 		 * @returns On success, returns an array of file paths chosen by the user,
 		 * otherwise returns undefined.
 		 */
-		showOpenDialog: typeof GitHubElectron.Dialog.showOpenDialog;
+		showOpenDialog: typeof Electron.Dialog.showOpenDialog;
 		/**
 		 * @param callback If supplied, the API call will be asynchronous.
 		 * @returns On success, returns the path of file chosen by the user, otherwise
 		 * returns undefined.
 		 */
-		showSaveDialog: typeof GitHubElectron.Dialog.showSaveDialog;
+		showSaveDialog: typeof Electron.Dialog.showSaveDialog;
 		/**
 		 * Shows a message box. It will block until the message box is closed. It returns .
 		 * @param callback If supplied, the API call will be asynchronous.
 		 * @returns The index of the clicked button.
 		 */
-		showMessageBox: typeof GitHubElectron.Dialog.showMessageBox;
+		showMessageBox: typeof Electron.Dialog.showMessageBox;
 
 		/**
 		 * Runs a modal dialog that shows an error message. This API can be called safely
@@ -1763,6 +1824,7 @@ declare module GitHubElectron {
 		clearCache(callback: Function): void;
 		clearStorageData(callback: Function): void;
 		clearStorageData(options: ClearStorageDataOptions, callback: Function): void;
+		flushStorageData(): void;
 		setProxy(config: string, callback: Function): void;
 		resolveProxy(url: URL, callback: (proxy: any) => any): void;
 		setDownloadPath(path: string): void;
@@ -1773,26 +1835,26 @@ declare module GitHubElectron {
 	}
 
 	interface CommonElectron {
-		clipboard: GitHubElectron.Clipboard;
-		crashReporter: GitHubElectron.CrashReporter;
-		nativeImage: typeof GitHubElectron.NativeImage;
-		shell: GitHubElectron.Shell;
+		clipboard: Electron.Clipboard;
+		crashReporter: Electron.CrashReporter;
+		nativeImage: typeof Electron.NativeImage;
+		shell: Electron.Shell;
 
-		app: GitHubElectron.App;
-		autoUpdater: GitHubElectron.AutoUpdater;
-		BrowserWindow: typeof GitHubElectron.BrowserWindow;
-		contentTracing: GitHubElectron.ContentTracing;
-		dialog: GitHubElectron.Dialog;
-		ipcMain: GitHubElectron.IPCMain;
-		globalShortcut: GitHubElectron.GlobalShortcut;
-		Menu: typeof GitHubElectron.Menu;
-		MenuItem: typeof GitHubElectron.MenuItem;
+		app: Electron.App;
+		autoUpdater: Electron.AutoUpdater;
+		BrowserWindow: typeof Electron.BrowserWindow;
+		contentTracing: Electron.ContentTracing;
+		dialog: Electron.Dialog;
+		ipcMain: Electron.IPCMain;
+		globalShortcut: Electron.GlobalShortcut;
+		Menu: typeof Electron.Menu;
+		MenuItem: typeof Electron.MenuItem;
 		powerMonitor: NodeJS.EventEmitter;
-		powerSaveBlocker: GitHubElectron.PowerSaveBlocker;
-		protocol: GitHubElectron.Protocol;
-		screen: GitHubElectron.Screen;
-		session: GitHubElectron.Session;
-		Tray: typeof GitHubElectron.Tray;
+		powerSaveBlocker: Electron.PowerSaveBlocker;
+		protocol: Electron.Protocol;
+		screen: Electron.Screen;
+		session: Electron.Session;
+		Tray: typeof Electron.Tray;
 		hideInternalModules(): void;
 	}
 
@@ -1814,11 +1876,11 @@ declare module GitHubElectron {
 		getSources(options: any, callback: (error: Error, sources: DesktopCapturerSource[]) => any): void;
 	}
 
-	interface Electron extends CommonElectron {
-		desktopCapturer: GitHubElectron.DesktopCapturer;
-		ipcRenderer: GitHubElectron.IpcRenderer;
-		remote: GitHubElectron.Remote;
-		webFrame: GitHubElectron.WebFrame;
+	interface ElectronMainAndRenderer extends CommonElectron {
+		desktopCapturer: Electron.DesktopCapturer;
+		ipcRenderer: Electron.IpcRenderer;
+		remote: Electron.Remote;
+		webFrame: Electron.WebFrame;
 	}
 }
 
@@ -1827,7 +1889,7 @@ interface Window {
 	 * Creates a new window.
 	 * @returns An instance of BrowserWindowProxy class.
 	 */
-	open(url: string, frameName?: string, features?: string): GitHubElectron.BrowserWindowProxy;
+	open(url: string, frameName?: string, features?: string): Electron.BrowserWindowProxy;
 }
 
 interface File {
@@ -1838,10 +1900,10 @@ interface File {
 }
 
 declare module 'electron' {
-	var electron: GitHubElectron.Electron;
+	var electron: Electron.ElectronMainAndRenderer;
 	export = electron;
 }
 
 interface NodeRequireFunction {
-	(id: 'electron'): GitHubElectron.Electron;
+	(moduleName: 'electron'): Electron.ElectronMainAndRenderer;
 }
